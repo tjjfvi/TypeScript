@@ -14271,7 +14271,7 @@ namespace ts {
                     const keyPropertyType = keyProperty && getRegularTypeOfLiteralType(getTypeOfSymbol(keyProperty));
                     for (const target of types) {
                         if (source !== target) {
-                            if (count === 100000) {
+                            if (count === Infinity) {
                                 // After 100000 subtype checks we estimate the remaining amount of work by assuming the
                                 // same ratio of checks per element. If the estimated number of remaining type checks is
                                 // greater than 1M we deem the union type too complex to represent. This for example
@@ -14787,7 +14787,7 @@ namespace ts {
 
         function checkCrossProductUnion(types: readonly Type[]) {
             const size = getCrossProductUnionSize(types);
-            if (size >= 100000) {
+            if (size >= Infinity) {
                 tracing?.instant(tracing.Phase.CheckTypes, "checkCrossProductUnion_DepthLimit", { typeIds: types.map(t => t.id), size });
                 error(currentNode, Diagnostics.Expression_produces_a_union_type_that_is_too_complex_to_represent);
                 return false;
@@ -15656,7 +15656,7 @@ namespace ts {
             // another (or, through recursion, possibly the same) conditional type. In the potentially tail-recursive
             // cases we increment the tail recursion counter and stop after 1000 iterations.
             while (true) {
-                if (tailCount === 1000) {
+                if (tailCount === Infinity) {
                     error(currentNode, Diagnostics.Type_instantiation_is_excessively_deep_and_possibly_infinite);
                     result = errorType;
                     break;
@@ -16792,7 +16792,7 @@ namespace ts {
             if (!couldContainTypeVariables(type)) {
                 return type;
             }
-            if (instantiationDepth === 100 || instantiationCount >= 5000000) {
+            if (instantiationDepth === Infinity || instantiationCount >= Infinity) {
                 // We have reached 100 recursive type instantiations, or 5M type instantiations caused by the same statement
                 // or expression. There is a very high likelyhood we're dealing with a combination of infinite generic types
                 // that perpetually generate new type identities, so we stop the recursion here by yielding the error type.
@@ -18805,7 +18805,7 @@ namespace ts {
                             return Ternary.Maybe;
                         }
                     }
-                    if (sourceDepth === 100 || targetDepth === 100) {
+                    if (sourceDepth === Infinity || targetDepth === Infinity) {
                         overflow = true;
                         return Ternary.False;
                     }
